@@ -11,15 +11,15 @@ JPG=${DST}/pic/*.jpg
 if
     [ ! -d "${DST}" ];then 
     mkdir -p ${DST}
-    echo "Создание директории ${DST}" >> ~/backups/log_${DATE}.txt
+    echo "Create directory ${DST}" >> ~/backups/log_${DATE}.txt
 else 
     rm -rf ${DST}/*
-    echo 'backups already exist! it`s cleared' >> ~/backups/log_${DATE}.txt
+    echo ${DST} 'already exist! it`s cleared' >> ~/backups/log_${DATE}.txt
 fi
  
 if [ -d "${DST}" ]; then
     mkdir -p ${DST}/txt ${DST}/pic ${DST}/mus ${DST}/compressed_img
-    echo -e "Создание поддиректорий \n${DST}/txt \n${DST}/pic \n${DST}/mus \n${DST}/compressed_img" >> ~/backups/log_${DATE}.txt
+    echo -e "Create subdirectory \n${DST}/txt \n${DST}/pic \n${DST}/mus \n${DST}/compressed_img" >> ~/backups/log_${DATE}.txt
 fi
 
     echo "Start copying data from ${SRC} to ${DST} with sort" >> ~/backups/log_${DATE}.txt
@@ -31,15 +31,13 @@ else
     echo 'Succes copy *.txt files' >> ~/backups/log_${DATE}.txt
 fi
 
-# if
-#     tar -zcpf ${DST}/txt/txt.tar ${DST}/txt
-#     echo 'Tar DST/txt'
-# then
-#     rm -rf ${DST}/txt/*.txt
-#     echo 'Rm txt files from DST/txt'
-# else
-#     echo 'fail tar'
-# fi
+if  tar -czf ${DST}/txt.tar.gz -P ${DST}/txt
+    echo "Archive directory ${DST}/txt" >> ~/backups/log_${DATE}.txt; then
+    rm -rf ${DST}/txt/*.txt
+    echo "Remove .txt files from ${DST}/txt after tar" >> ~/backups/log_${DATE}.txt
+else
+    echo "Fail when create archive" >> ~/backups/log_${DATE}.txt
+fi
 
 if [[ -z ${FIND_JPG} ]]; then
     echo ".jpg files not found" >> ~/backups/log_${DATE}.txt
@@ -60,8 +58,9 @@ fi
 for file in ${JPG}; do
     mogrify "$file" -quality 80% -path ${DST}/compressed_img "$file"
 done;
+   
     cat ~/backups/log_${DATE}.txt
-    
+
     check_ini () {
         CHK=`cat backup.ini | grep to_external_server=1 | grep -v grep`
     }
