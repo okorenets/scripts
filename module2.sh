@@ -62,13 +62,8 @@ done;
 
     cat ~/backups/log_${DATE}.txt
 
-if  [ -f ${SRC}/backup.ini ]; then
-    check_ini () {
-        CHK=`cat backup.ini | grep to_external_server=1 | grep -v grep`
-    }
+if  [ -f ${SRC}/backup.ini ]; then 
     echo 'Need backup to ext serv'
-else
-    echo 'ini file not found'
-fi
-    
+else echo 'ini file not found'
+fi   
 
