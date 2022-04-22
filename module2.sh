@@ -31,7 +31,7 @@ else
     echo 'Succes copy *.txt files' >> ~/backups/log_${DATE}.txt
 fi
 
-if  tar -czf ${DST}/txt.tar.gz -P ${DST}/txt
+if  tar -czpf ${DST}/txt.tar.gz -P ${DST}/txt
     echo "Archive directory ${DST}/txt" >> ~/backups/log_${DATE}.txt; then
     rm -rf ${DST}/txt/*.txt
     echo "Remove .txt files from ${DST}/txt after tar" >> ~/backups/log_${DATE}.txt
@@ -58,24 +58,17 @@ fi
 for file in ${JPG}; do
     mogrify "$file" -quality 80% -path ${DST}/compressed_img "$file"
 done;
-   
+    echo "Mogrify with -quality 80% .jpg files in ${DST}/pic" >> ~/backups/log_${DATE}.txt
+
     cat ~/backups/log_${DATE}.txt
 
+if  [ -f ${SRC}/backup.ini ]; then
     check_ini () {
         CHK=`cat backup.ini | grep to_external_server=1 | grep -v grep`
     }
-    # servers () {
-    #     SRV=`cat backup.ini | `
-    # }
-while check_ini
-    do
-        if [ -n "$CHK" ]
-        then
-            echo 'Need backup to ext serv'
-            break
-        else
-            echo 'ini not found'
-            break
-        fi
-    done
+    echo 'Need backup to ext serv'
+else
+    echo 'ini file not found'
+fi
+    
 
