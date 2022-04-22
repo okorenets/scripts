@@ -63,7 +63,12 @@ done;
     cat ~/backups/log_${DATE}.txt
 
 if  [ -f ${SRC}/backup.ini ]; then 
-    echo 'Need backup to ext serv'
+    echo 'backup.ini found, check need_backup status...'
 else echo 'ini file not found'
 fi   
 
+if grep -q to_external_server=1 ${SRC}/backup.ini; then
+    echo "Need rsync -rv ${DST}   User@RemoteHost:Destination"
+else
+    echo "No need copy to external servers"
+fi
