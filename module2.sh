@@ -1,12 +1,13 @@
 # BACKUP-SCRIPT
 
 DATE=$(date +"%Y-%m-%d_%H-%M")
-SRC=~/test2/module2
-DST=~/backups/${DATE}
+SRC=~/test2/module2     # $ source for backup
+DST=~/backups/${DATE}   # $ destination for backup
 FIND_TXT=`find ${SRC} -name "*.txt"`
 FIND_JPG=`find ${SRC} -name "*.jpg"`
 FIND_MP3=`find ${SRC} -name "*.mp3"`
-JPG=${DST}/pic/*.jpg
+JPG=${DST}/pic/*.jpg    # $ for mogrify
+. ${SRC}/backup.ini     # include .ini file
 
 if
     [ ! -d "${DST}" ];then 
@@ -60,15 +61,21 @@ for file in ${JPG}; do
 done;
     echo "Mogrify with -quality 80% .jpg files in ${DST}/pic" >> ~/backups/log_${DATE}.txt
 
-    cat ~/backups/log_${DATE}.txt
-
+    
 if  [ -f ${SRC}/backup.ini ]; then 
     echo 'backup.ini found, check need_backup status...'
-else echo 'ini file not found'
+else echo 'ini file not found' >> ~/backups/log_${DATE}.txt
 fi   
 
-if grep -q to_external_server=1 ${SRC}/backup.ini; then
-    echo "Need rsync -rv ${DST}   User@RemoteHost:Destination"
+if [ "${need_backup_to_external_server}" == 1 ]; then
+    for IP in ${external_servers[@]}
+    do scp -r ${DST} ${IP}
+    done
+    echo "Backup copied from ${DST} to external_servers" >> ~/backups/log_${DATE}.txt
 else
-    echo "No need copy to external servers"
+    echo "No need copy to external servers" >> ~/backups/log_${DATE}.txt
 fi
+
+    echo "Backup script complete!!! ${DATE}" >> ~/backups/log_${DATE}.txt
+
+cat ~/backups/log_${DATE}.txt
