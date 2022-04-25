@@ -76,6 +76,9 @@ else
     echo "No need copy to external servers" >> ~/backups/log_${DATE}.txt
 fi
 
+./remove.sh # Start remove script for old backups
+    echo "Remove older then 10 day backups" >> ~/backups/log_${DATE}.txt
+   
     echo "Backup script complete!!! ${DATE}" >> ~/backups/log_${DATE}.txt
 
 cat ~/backups/log_${DATE}.txt
