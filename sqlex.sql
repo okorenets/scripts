@@ -154,6 +154,12 @@ SELECT model
 FROM PC
 WHERE speed >= 450);
 
+//Решение с JOIN
+SELECT maker FROM Product 
+LEFT JOIN PC ON PC.model = Product.model
+WHERE type = 'pc' AND
+speed>=450
+GROUP BY maker
 
 //ЗАДАНИЕ №10
 //Найдите модели принтеров, имеющих самую высокую цену. Вывести: model, price
