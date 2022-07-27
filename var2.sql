@@ -34,8 +34,13 @@ CREATE TABLE `avto` (
   PRIMARY KEY (`id`),
   KEY `model_id_fk` (`model_id`),
   KEY `client_id_fk` (`client_id`),
+  KEY `number_index` (`number`) USING BTREE,
+  KEY `vendor_id_afk` (`vendor_id`),
+  KEY `country_id_afk` (`country_id`),
   CONSTRAINT `client_id_fk` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `country_id_afk` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `model_id_fk` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `vendor_id_afk` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -89,7 +94,8 @@ CREATE TABLE `client` (
   `surname` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
   `avto_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `client_index` (`surname`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -141,6 +147,7 @@ CREATE TABLE `master` (
   `service_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `service_id_fk` (`service_id`),
+  KEY `master_surname_index` (`surname`) USING BTREE,
   CONSTRAINT `service_id_fk` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -169,6 +176,8 @@ CREATE TABLE `model` (
   `vendor_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `vendor_id_fk` (`vendor_id`),
+  KEY `country_id_mfk` (`country_id`),
+  CONSTRAINT `country_id_mfk` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `vendor_id_fk` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -234,6 +243,8 @@ CREATE TABLE `service` (
   PRIMARY KEY (`id`),
   KEY `city_id_fk` (`city_id`),
   KEY `contry_id_sfk` (`country_id`),
+  KEY `service_name_index` (`service_name`) USING BTREE,
+  KEY `street_index` (`street`) USING BTREE,
   CONSTRAINT `city_id_fk` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `contry_id_sfk` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -285,4 +296,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-27 15:55:31
+-- Dump completed on 2022-07-27 17:53:26
